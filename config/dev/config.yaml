@@ -1,0 +1,73 @@
+# 测试环境的配置
+
+# 运行模式(debug：调试模式，release：正式模式)
+RunMode: "debug"
+
+
+# 请求频率限制
+RateLimiter:
+  # 是否启用
+  enable: false
+  # 每分钟每个用户允许的最大请求数量
+  count: 300
+
+# 日志模块
+Log:
+  # 日志级别(1:fatal 2:error,3:warn,4:info,5:debug,6:trace)
+  level: 5
+  # 日志格式（支持输出格式：text/json）
+  format: "text"
+  # 日志输出(支持：stdout/stderr/file)
+  output: "stdout"
+  # 指定日志输出的文件路径
+  outputFile: "data/gin-admin.log"
+  # 是否启用日志钩子
+  enableHook: false
+  # 写入钩子的日志级别
+  hookLevels: [ "info", "warn", "error" ]
+  # 日志钩子(支持：gorm/mongo)
+  hook: "gorm"
+  # 写入钩子的最大工作线程数量
+  hookMaxThread: 1
+  # 写入钩子的最大缓冲区数量
+  hookMaxBuffer: 512
+  # 日志轮询数量
+  rotationCount: 20
+  # 日志轮询时间周期
+  rotationTime: 24
+
+
+
+
+
+Gorm:
+  # 设置连接可以重用的最长时间(单位：秒)
+  maxLifetime: 7200
+  # 设置数据库的最大打开连接数
+  maxOpenConns: 150
+  # 是否启用自动映射数据库表结构
+  enableAutoMigrate: false
+
+# MySQL:
+#   default:
+#     host: '127.0.0.1'
+#     prot: 3306
+#     dbname: "role-system"
+#     user: "root"
+#     password: "123456"
+#     parameters: "charset=utf8mb4&parseTime=True&loc=Local&allowNativePasswords=true"
+
+SQLite:
+  default:
+    file: "config/db/word.db"
+
+
+Redis:
+  default:
+    host: "127.0.0.1"
+    prot: 6379
+    user:
+    password:
+    db: 0
+    timeout: 10
+
