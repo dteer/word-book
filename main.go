@@ -10,6 +10,5 @@ func main() {
 	// run.InitLog()
 	config.InitConfig()
 	run.InitGorm()
-	service.Get()
-
+	service.Run()
 }

@@ -9,8 +9,11 @@ require (
 	gorm.io/gorm v1.24.0
 )
 
+require github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d // indirect
+
 require (
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
+	github.com/go-toast/toast v0.0.0-20190211030409-01e6764cf0a4
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect

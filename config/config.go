@@ -39,6 +39,7 @@ type Config struct {
 	PrintConfig bool   // 配置打印
 	Redis       Redis  // redis配置
 	SQLite      SQLite // mysql配置
+	Common      Common // 常规操作
 }
 
 func (c *Config) IsDebugMode() bool {
@@ -60,4 +61,8 @@ type Redis map[string]struct {
 	Password string
 	Db       int
 	Timeout  int
+}
+
+type Common struct {
+	Interval int
 }
