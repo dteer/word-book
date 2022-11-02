@@ -6,6 +6,8 @@ RunMode: "debug"
 
 Common:
   interval: 120
+  new: 10
+  old: 20
 
 # 日志模块
 Log:
@@ -56,6 +58,7 @@ Gorm:
 SQLite:
   default:
     file: "config/db/word.db"
+    initFile: "config/db/word.init.db"
 
 
 Redis:

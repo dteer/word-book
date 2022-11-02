@@ -3,22 +3,16 @@ module word-book
 go 1.19
 
 require (
+	github.com/go-toast/toast v0.0.0-20190211030409-01e6764cf0a4
 	github.com/gomodule/redigo v1.8.9
-	github.com/spf13/viper v1.13.0
 	gorm.io/driver/sqlite v1.4.3
-	gorm.io/gorm v1.24.0
+	gorm.io/gorm v1.24.1
 )
-
-require github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d // indirect
 
 require (
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
-	github.com/go-toast/toast v0.0.0-20190211030409-01e6764cf0a4
 	github.com/hashicorp/hcl v1.0.0 // indirect
-	github.com/jinzhu/inflection v1.0.0 // indirect
-	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
-	github.com/mattn/go-sqlite3 v1.14.15 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.5 // indirect
@@ -32,4 +26,12 @@ require (
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+)
+
+require (
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/mattn/go-sqlite3 v1.14.15 // indirect
+	github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d // indirect
+	github.com/spf13/viper v1.13.0
 )

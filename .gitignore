@@ -1,0 +1,6 @@
+.vscode
+*.pyc
+__pycache__/
+.idea
+/config/db/word.db
+go.sum

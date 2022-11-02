@@ -7,9 +7,10 @@ import (
 type FindData struct {
 	ID          uint
 	Tile        string
-	StartTimeLt int
-	StartTime   int   `default:"-1"`
-	ShowTime    int64 `default:"-1"` // -1代表不介入查询
+	StartTimeLt *int
+	StartTimeGt *int
+	StartTime   *int
+	ShowTime    *int
 
 	// 其他操作
 	Page  int
@@ -26,13 +27,16 @@ func Find(data FindData) (words []Word) {
 		db = db.Where("tile = ?", data.Tile)
 	}
 
-	if data.StartTime != -1 {
+	if data.StartTime != nil {
 		db = db.Where("start_time = ?", data.StartTime)
 	}
-	if data.StartTimeLt != 0 {
+	if data.StartTimeLt != nil {
 		db = db.Where("start_time < ?", data.StartTimeLt)
 	}
-	if data.ShowTime != -1 {
+	if data.StartTimeGt != nil {
+		db = db.Where("start_time > ?", data.StartTimeGt)
+	}
+	if data.ShowTime != nil {
 		db = db.Where("show_time = ?", data.ShowTime)
 	}
 	if data.Limit != 0 {
@@ -44,7 +48,7 @@ func Find(data FindData) (words []Word) {
 	if data.Order == "" {
 		data.Order = "ID ASC"
 	}
-	db.Find(&words).Order(data.Order)
+	db.Order(data.Order).Find(&words)
 	return
 }
 

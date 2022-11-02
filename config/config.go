@@ -35,23 +35,30 @@ func InitConfig() {
 }
 
 type Config struct {
-	RunMode     string // 启动环境 debug/prod
-	PrintConfig bool   // 配置打印
-	Redis       Redis  // redis配置
-	SQLite      SQLite // mysql配置
-	Common      Common // 常规操作
+	RunMode     string     // 启动环境 debug/prod
+	PrintConfig bool       // 配置打印
+	Redis       Redis      // redis配置
+	SQLite      SQLiteList // mysql配置
+	Common      Common     // 常规操作
 }
 
 func (c *Config) IsDebugMode() bool {
 	return c.RunMode == "debug"
 }
 
-type SQLite map[string]struct {
-	File string
+type SQLiteList map[string]struct {
+	File     string
+	InitFile string
 }
 
-func (a SQLite) DSN(name string) string {
+func (a SQLiteList) DSN(name string) string {
 	return a[name].File
+}
+func (a SQLiteList) Default() struct {
+	File     string
+	InitFile string
+} {
+	return a["default"]
 }
 
 type Redis map[string]struct {
@@ -65,4 +72,6 @@ type Redis map[string]struct {
 
 type Common struct {
 	Interval int
+	New      int
+	Old      int
 }
