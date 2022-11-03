@@ -5,21 +5,23 @@ import (
 )
 
 type FindData struct {
-	ID          uint
-	Tile        string
-	StartTimeLt *int
-	StartTimeGt *int
-	StartTime   *int
-	ShowTime    *int
+	ID           uint    `filed:"id" abc:"" condition:"="`
+	Tile         string  `filed:"title" abc:"" condition:"="`
+	StartTimeLt  *int    `filed:"start_time" abc:"nil" condition:"<"`
+	StartTimeGt  *int    `filed:"start_time" abc:"nil" condition:"="`
+	StartTime    *int    `filed:"sart_time" abc:"nil" condition:"="`
+	ShowTime     *int    `filed:"show_time" abc:"nil" condition:"="`
+	ComplexityNt *string `filed:"complexity" abc:"nil" condition:"!="`
 
 	// 其他操作
-	Page  int
-	Limit int
-	Order string
+	Page  int    `filed:"complexity" abc:"0" condition:"="`
+	Limit int    `filed:"complexity" abc:"0" condition:"="`
+	Order string `filed:"complexity" abc:"" condition:"="`
 }
 
 func Find(data FindData) (words []Word) {
 	db := initiable.GetDefaultGorm()
+
 	if data.ID != 0 {
 		db = db.Where("id = ?", data.ID)
 	}
@@ -38,6 +40,9 @@ func Find(data FindData) (words []Word) {
 	}
 	if data.ShowTime != nil {
 		db = db.Where("show_time = ?", data.ShowTime)
+	}
+	if data.ComplexityNt != nil {
+		db = db.Where("complexity != ?", data.ComplexityNt)
 	}
 	if data.Limit != 0 {
 		db = db.Limit(data.Limit)

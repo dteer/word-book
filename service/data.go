@@ -4,6 +4,7 @@ import (
 	"sort"
 	"word-book/dao/word"
 	util "word-book/pkg/utils"
+	"word-book/recommend/strategy"
 )
 
 func handleAddWord(count int) (words []word.Word) {
@@ -70,7 +71,7 @@ func recommendSort() {
 	var sortWord []weightWord
 	today := util.GetNowDay()
 	allData := getAllOldWord(today)
-	s := NewStrategyOne()
+	s := strategy.NewStrategyOne()
 	for _, data := range allData {
 		data := data
 		day := util.Interval(int(data.StartTime), today)
