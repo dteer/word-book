@@ -1,7 +1,7 @@
 package word
 
 import (
-	"word-book/run"
+	"word-book/initiable"
 )
 
 type FindData struct {
@@ -19,7 +19,7 @@ type FindData struct {
 }
 
 func Find(data FindData) (words []Word) {
-	db := run.GetDefaultGorm()
+	db := initiable.GetDefaultGorm()
 	if data.ID != 0 {
 		db = db.Where("id = ?", data.ID)
 	}
@@ -57,13 +57,13 @@ func SetTodayStartTime(words []Word, today int) {
 	for _, word := range words {
 		ids = append(ids, int64(word.ID))
 	}
-	db := run.GetDefaultGorm()
+	db := initiable.GetDefaultGorm()
 	db.Model(&Word{}).Where("id in ?", ids).Updates(Word{StartTime: int64(today)})
 	db.Commit()
 }
 
 func UdateShowTime(word Word) {
-	db := run.GetDefaultGorm()
+	db := initiable.GetDefaultGorm()
 	showTime := word.ShowTime + 1
 	db.Model(&word).Select("ShowTime").Updates(Word{ShowTime: showTime})
 	db.Commit()

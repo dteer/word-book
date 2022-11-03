@@ -1,4 +1,4 @@
-package run
+package initiable
 
 import (
 	"log"

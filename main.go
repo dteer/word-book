@@ -3,8 +3,8 @@ package main
 import (
 	"os"
 	"word-book/config"
+	"word-book/initiable"
 	util "word-book/pkg/utils"
-	"word-book/run"
 	"word-book/service"
 )
 
@@ -26,6 +26,6 @@ func main() {
 	// run.InitLog()
 	config.InitConfig()
 	checkDB()
-	run.InitGorm()
+	initiable.InitGorm()
 	service.ServiceRun()
 }
