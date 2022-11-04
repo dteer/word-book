@@ -21,8 +21,3 @@ func CheckDB() {
 		recover()
 	}
 }
-
-// 更新数据库的复杂度
-func UdateWordComplexity() {
-
-}

@@ -1,11 +1,13 @@
 package word
 
 import (
+	"math"
 	"word-book/initiable"
 )
 
+// todo 后续根据tag，采用反射进行改造
 type FindData struct {
-	ID           uint    `filed:"id" abc:"" condition:"="`
+	ID           uint    `filed:"id" abc:"0" condition:"="`
 	Tile         string  `filed:"title" abc:"" condition:"="`
 	StartTimeLt  *int    `filed:"start_time" abc:"nil" condition:"<"`
 	StartTimeGt  *int    `filed:"start_time" abc:"nil" condition:"="`
@@ -17,6 +19,21 @@ type FindData struct {
 	Page  int    `filed:"complexity" abc:"0" condition:"="`
 	Limit int    `filed:"complexity" abc:"0" condition:"="`
 	Order string `filed:"complexity" abc:"" condition:"="`
+}
+
+// 查找所有数据
+func FindAll() (words []Word) {
+	db := initiable.GetDefaultGorm()
+	db.Find(&words)
+	return
+}
+
+// 存储数据
+func UpdateAll(words []Word, fileds []string) {
+	db := initiable.GetDefaultGorm()
+	fileds = append(fileds, "id")
+	db.Select(fileds).Save(&words)
+	db.Commit()
 }
 
 func Find(data FindData) (words []Word) {
@@ -72,4 +89,22 @@ func UdateShowTime(word Word) {
 	showTime := word.ShowTime + 1
 	db.Model(&word).Select("ShowTime").Updates(Word{ShowTime: showTime})
 	db.Commit()
+}
+
+/*
+更新数据库的复杂度
+复杂度计算：n²-n+2
+*/
+func complexity(title string) int {
+	TitleLen := len(title)
+	index := math.Ceil(float64(TitleLen) / 3)
+	return int(math.Pow(index, 2) - index + 2)
+}
+
+func UdateWordComplexity() {
+	words := FindAll()
+	for i := 0; i < len(words); i++ {
+		words[i].Complexity = complexity(words[i].Title)
+	}
+	UpdateAll(words, []string{"complexity"})
 }
