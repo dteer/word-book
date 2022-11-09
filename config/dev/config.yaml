@@ -6,6 +6,7 @@ RunMode: "debug"
 
 Common:
   interval: 120
+  remmandInterval: 600 
   new: 10
   old: 20
 

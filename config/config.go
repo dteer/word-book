@@ -2,16 +2,18 @@ package config
 
 import (
 	"os"
+	"path"
+	"runtime"
 
 	"github.com/spf13/viper"
 )
 
 var C Config
 
-func LoadConfig(conf *Config, path string, filteType string) {
+func LoadConfig(conf *Config, confPath string, filteType string) {
 	var confObj = viper.New()
 	confObj.SetConfigType(filteType)
-	confObj.AddConfigPath(path)
+	confObj.AddConfigPath(confPath)
 	//读取配置文件内容
 	if err := confObj.ReadInConfig(); err != nil {
 		panic(err)
@@ -23,18 +25,25 @@ func LoadConfig(conf *Config, path string, filteType string) {
 
 func InitConfig() {
 	env := os.Getenv("ENV")
-	var path string
+	var abPath string
+	_, filename, _, ok := runtime.Caller(0)
+	if ok {
+		abPath = path.Dir(path.Dir(filename))
+	}
+	var confPath string
 	if env == "" {
-		path = "config/dev"
+		confPath = path.Join(abPath, "config/dev")
 	} else if env == "PROD" {
-		path = "config/prod"
+		confPath = path.Join(abPath, "config/prod")
 	} else {
 		panic("请设置环境变量: ENV=DEBUG(测试) ENV=PROD(正式)")
 	}
-	LoadConfig(&C, path, "yaml")
+	LoadConfig(&C, confPath, "yaml")
+	C.ItemPath = abPath
 }
 
 type Config struct {
+	ItemPath    string
 	RunMode     string     // 启动环境 debug/prod
 	PrintConfig bool       // 配置打印
 	Redis       Redis      // redis配置
@@ -71,7 +80,8 @@ type Redis map[string]struct {
 }
 
 type Common struct {
-	Interval int
-	New      int
-	Old      int
+	Interval        int
+	RemmandInterval int
+	New             int
+	Old             int
 }

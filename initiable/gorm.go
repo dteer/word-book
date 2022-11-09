@@ -2,6 +2,7 @@ package initiable
 
 import (
 	"log"
+	"path"
 	"sync"
 	"time"
 	"word-book/config"
@@ -15,7 +16,7 @@ import (
 var GormDB = make(map[string]*gorm.DB)
 
 func ConnectGorm(name string) (*gorm.DB, error) {
-	dns := config.C.SQLite.DSN(name)
+	dns := path.Join(config.C.ItemPath, config.C.SQLite.DSN(name))
 	db, err := gorm.Open(sqlite.Open(dns), &gorm.Config{
 		// gorm日志模式：silent
 		NamingStrategy: schema.NamingStrategy{

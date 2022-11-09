@@ -1,4 +1,4 @@
-package strategy
+package one
 
 type Weight struct {
 	Day        float64 `json:"day" text:"离第一次学习的天数差  权重占比"`
@@ -8,8 +8,9 @@ type Weight struct {
 }
 type strategyOne struct {
 	Weight
-	DayWeightMap     map[int]float64 `json:"day_weight_map" text:"离第一次学习的天数差  权重占比(加权)"`
-	DefaultDayWeight float64         `json:"default_day_weight" text:"默认的天数占比 权重占比(加权)"`
+	CallValueMap     map[int]float64 `json:"day_weight_map" text:"x回调值映射(key(离第一次的天数):value(回调值))"`
+	CallValueDefault float64         `json:"default_day_weight" text:"x回调值(默认)"`
+	ForgetValue      float64         `json:"forget_value" text:"遗忘值,用于调控遗忘度"`
 }
 
 func NewStrategyOne() *strategyOne {
@@ -19,13 +20,15 @@ func NewStrategyOne() *strategyOne {
 			Complexity: 0.6,
 			ShowTime:   0.01,
 		},
-		DayWeightMap: map[int]float64{
+		CallValueMap: map[int]float64{
 			1:  100,
 			2:  80,
 			5:  73,
 			7:  75,
 			10: 79,
 		},
+		CallValueDefault: 0,
+		ForgetValue:      100,
 	}
 	return s
 }
@@ -39,16 +42,20 @@ func NewStrategyOne() *strategyOne {
 func (s *strategyOne) getX(day int, complexity int, showTime int) (x float64) {
 	x = s.Weight.Day*float64(day) + s.Weight.Complexity*float64(complexity) + s.Weight.ShowTime*float64(showTime)
 	// 添加决定因素
-	b, ok := s.DayWeightMap[day]
+	callValue, ok := s.CallValueMap[day]
 	if !ok {
-		b = s.DefaultDayWeight
+		callValue = s.CallValueDefault
 	}
-	x += b
+	x += callValue
 	return
 }
 
 func (s *strategyOne) GetY(day int, complexity int, showTime int) (y float64) {
 	x := s.getX(day, complexity, showTime)
 	y = 1 / x
+	// 大于十天遗忘度需要进行提高
+	if day > 10 {
+		y += 1 / s.ForgetValue * float64(day) * s.Day
+	}
 	return
 }

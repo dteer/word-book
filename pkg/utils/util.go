@@ -63,3 +63,18 @@ func CopyFile(src, dst string) (int64, error) {
 // todo 补充根据tag完成查询
 func GormFindJson(a any, db *gorm.DB) {
 }
+
+func TimingRefresh(f func(), times int, ch <-chan struct{}) {
+	waitTime := time.Duration(times) * time.Second
+	timer := time.NewTimer(waitTime)
+	for {
+		select {
+		case <-ch:
+			return
+		case <-timer.C:
+			go f()
+			timer.Reset(waitTime)
+		}
+
+	}
+}
