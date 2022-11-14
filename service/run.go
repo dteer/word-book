@@ -10,7 +10,13 @@ import (
 
 func ServiceRun() {
 	// 刷新推荐
-	go util.TimingRefresh(one.HandleRommend, config.C.Common.RemmandInterval, make(<-chan struct{}))
+	var funcList = make([]func(), 1)
+	funcList[0] = one.HandleRommend
+	reFresh := util.TimingRefresh{
+		F:     funcList,
+		Times: config.C.Common.RemmandInterval,
+	}
+	go reFresh.Run()
 
 	newCount := config.C.Common.New
 	oldCount := config.C.Common.Old

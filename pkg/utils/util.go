@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"sync"
 	"time"
 
 	"gorm.io/gorm"
@@ -64,17 +65,38 @@ func CopyFile(src, dst string) (int64, error) {
 func GormFindJson(a any, db *gorm.DB) {
 }
 
-func TimingRefresh(f func(), times int, ch <-chan struct{}) {
-	waitTime := time.Duration(times) * time.Second
+// 定时器
+/*
+:param f 需要定时执行的函数
+:param times 定时(s)
+:param ch 是否停止
+:param
+*/
+type TimingRefresh struct {
+	F     []func()
+	Times int
+	ch    chan struct{}
+}
+
+func (t *TimingRefresh) Run() {
+	waitTime := time.Duration(t.Times) * time.Second
 	timer := time.NewTimer(waitTime)
+	var wg = sync.WaitGroup{}
 	for {
 		select {
-		case <-ch:
+		case <-t.ch:
 			return
 		case <-timer.C:
-			go f()
+			for index := range t.F {
+				go t.F[index]()
+				wg.Add(1)
+			}
 			timer.Reset(waitTime)
 		}
 
 	}
+}
+
+func (t *TimingRefresh) Close() {
+	t.ch <- struct{}{}
 }
