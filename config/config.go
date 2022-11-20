@@ -4,6 +4,7 @@ import (
 	"os"
 	"path"
 	"runtime"
+	util "word-book/service/pkg/utils"
 
 	"github.com/spf13/viper"
 )
@@ -23,7 +24,7 @@ func LoadConfig(conf *Config, confPath string, filteType string) {
 	}
 }
 
-func InitConfig() {
+func initConfig() {
 	env := os.Getenv("ENV")
 	var abPath string
 	_, filename, _, ok := runtime.Caller(0)
@@ -84,4 +85,22 @@ type Common struct {
 	RemmandInterval int
 	New             int
 	Old             int
+}
+
+func checkDB() {
+	dbFile := path.Join(C.ItemPath, C.SQLite.Default().File)
+	initDBFile := path.Join(C.ItemPath, C.SQLite.Default().InitFile)
+	if _, err := os.Stat(dbFile); err != nil {
+		if os.IsNotExist(err) {
+			// 复制初始文件
+			util.CopyFile(initDBFile, dbFile)
+		}
+	} else {
+		recover()
+	}
+}
+
+func init() {
+	initConfig()
+	checkDB()
 }

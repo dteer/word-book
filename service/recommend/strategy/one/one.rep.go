@@ -2,8 +2,8 @@ package one
 
 import (
 	"sort"
-	"word-book/dao/word"
-	util "word-book/pkg/utils"
+	"word-book/service/dao/word"
+	util "word-book/service/pkg/utils"
 )
 
 type weightWord struct {

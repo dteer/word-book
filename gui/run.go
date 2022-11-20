@@ -1,4 +1,4 @@
-package service
+package gui
 
 import (
 	"log"
@@ -7,7 +7,7 @@ import (
 	"github.com/go-toast/toast"
 )
 
-func popWord(w word.Word) {
+func showWord(w word.Word) {
 	notification := toast.Notification{
 		AppID:   "Microsoft.Windows.Shell.RunDialog",
 		Title:   w.Title,

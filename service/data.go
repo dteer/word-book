@@ -1,8 +1,6 @@
 package service
 
-import (
-	"word-book/dao/word"
-)
+import "word-book/service/dao/word"
 
 func handleAddWord(count int) (words []word.Word) {
 	StartTime := 0

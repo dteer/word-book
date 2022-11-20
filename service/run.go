@@ -3,9 +3,9 @@ package service
 import (
 	"time"
 	"word-book/config"
-	"word-book/dao/word"
-	util "word-book/pkg/utils"
-	"word-book/recommend/strategy/one"
+	"word-book/service/dao/word"
+	util "word-book/service/pkg/utils"
+	"word-book/service/recommend/strategy/one"
 )
 
 func ServiceRun() {

@@ -1,0 +1,31 @@
+// 这个就是protobuf的中间文件
+
+// 指定的当前proto语法的版本，有2和3
+syntax = "proto3";
+option go_package="../service";
+
+// 指定等会文件生成出来的package
+package service;
+
+// 定义request model
+message ShowRequest{
+}
+
+// 定义response model
+message ShowResponse{
+	bool code = 1;
+    repeated Data Data = 2;
+}
+
+message Data{
+    uint64 ID=1;
+    string Title=2;
+    string PhoneticStymbol=3;
+    string Description=4;
+}
+
+// 定义服务主体
+service ProdService{
+    // 定义方法
+    rpc GetRecommendWord(ShowRequest) returns(ShowResponse);
+} 
