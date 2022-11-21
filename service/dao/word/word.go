@@ -3,7 +3,7 @@ package word
 import "time"
 
 type Word struct {
-	ID              uint      `gorm:"primarykey"`
+	ID              uint64    `gorm:"primarykey"`
 	Title           string    `gorm:"title"`
 	PhoneticStymbol string    `gorm:"phonetic_stymbol"`
 	Description     string    `gorm:"description"`

@@ -9,5 +9,5 @@ import (
 func main() {
 	initiable.InitGorm()
 	word.UdateWordComplexity()
-	service.ServiceRun()
+	service.Server()
 }

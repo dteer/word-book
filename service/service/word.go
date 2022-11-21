@@ -1,43 +1,39 @@
 package service
 
-import context "context"
+import (
+	context "context"
+	"word-book/config"
+	util "word-book/service/pkg/utils"
+	"word-book/service/recommend/strategy/one"
+)
 
 type wordService struct {
 }
 
+var ProdService = &wordService{}
+
 func (w *wordService) GetRecommendWord(context.Context, *ShowRequest) (*ShowResponse, error) {
-		// 刷新推荐
-		var funcList = make([]func(), 1)
-		funcList[0] = one.HandleRommend
-		reFresh := util.TimingRefresh{
-			F:     funcList,
-			Times: config.C.Common.RemmandInterval,
+	newCount := config.C.Common.New
+	oldCount := config.C.Common.Old
+	Today := util.GetNowDay()
+	newWords := getNewWord(newCount, Today)
+	words := append(newWords, one.GetRecommendWrods(oldCount)...)
+	var datas []*Data
+	for _, word := range words {
+		tmp := Data{
+			ID:              word.ID,
+			Title:           word.Title,
+			PhoneticStymbol: word.PhoneticStymbol,
+			Description:     word.Description,
 		}
-		go reFresh.Run()
-	
-		newCount := config.C.Common.New
-		oldCount := config.C.Common.Old
-		Today := util.GetNowDay()
-		newWords := getNewWord(newCount, Today)
-		wordChanel := make(chan word.Word, 20)
-		go handle(wordChanel)
-		for {
-			words := append(newWords, one.GetRecommendWrods(oldCount)...)
-			for _, w := range words {
-				popWord(w)
-				wordChanel <- w
-				time.Sleep(time.Duration(config.C.Common.Interval) * time.Second)
-			}
-		}
-	}	
-}
-
-// 通过队列进行处理相关信息
-func handle(wordLi chan word.Word) {
-	data := <-wordLi
-	word.UdateShowTime(data)
-}
-
-func mustEmbedUnimplementedProdServiceServer() {
+		datas = append(datas, &tmp)
+	}
+	data := &ShowResponse{
+		Code: true,
+		Data: datas,
+	}
+	return data, nil
 
 }
+
+func (w *wordService) mustEmbedUnimplementedProdServiceServer() {}

@@ -1,14 +1,17 @@
 package service
 
 import (
-	"time"
+	"fmt"
+	"net"
 	"word-book/config"
-	"word-book/service/dao/word"
 	util "word-book/service/pkg/utils"
 	"word-book/service/recommend/strategy/one"
+	service "word-book/service/service"
+
+	"google.golang.org/grpc"
 )
 
-func ServiceRun() {
+func Server() {
 	// 刷新推荐
 	var funcList = make([]func(), 1)
 	funcList[0] = one.HandleRommend
@@ -17,25 +20,13 @@ func ServiceRun() {
 		Times: config.C.Common.RemmandInterval,
 	}
 	go reFresh.Run()
-
-	newCount := config.C.Common.New
-	oldCount := config.C.Common.Old
-	Today := util.GetNowDay()
-	newWords := getNewWord(newCount, Today)
-	wordChanel := make(chan word.Word, 20)
-	go handle(wordChanel)
-	for {
-		words := append(newWords, one.GetRecommendWrods(oldCount)...)
-		for _, w := range words {
-			popWord(w)
-			wordChanel <- w
-			time.Sleep(time.Duration(config.C.Common.Interval) * time.Second)
-		}
+	// 服务执行
+	server := grpc.NewServer()
+	service.RegisterProdServiceServer(server, service.ProdService)
+	listener, err := net.Listen("tcp", ":8002")
+	if err != nil {
+		panic(fmt.Sprintf("服务器监听端口失败：%s", err))
 	}
-}
-
-// 通过队列进行处理相关信息
-func handle(wordLi chan word.Word) {
-	data := <-wordLi
-	word.UdateShowTime(data)
+	fmt.Println("启动grpc服务器,监听端口: 8002")
+	_ = server.Serve(listener)
 }
